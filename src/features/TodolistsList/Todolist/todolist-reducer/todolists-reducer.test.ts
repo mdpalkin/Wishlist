@@ -3,7 +3,7 @@ import {
   TodolistDomainType,
   todolistsActions,
   todolistsReducer,
-} from "./todolists-reducer"
+} from "features/TodolistsList/Todolist/todolist-reducer/todolists-reducer"
 import { v1 } from "uuid"
 import { TodolistType } from "api/todolists-api"
 import { RequestStatusType } from "app/app-reducer"

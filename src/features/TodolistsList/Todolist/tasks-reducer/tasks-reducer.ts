@@ -11,7 +11,7 @@ import { AppRootStateType } from "app/store"
 import { handleServerAppError, handleServerNetworkError } from "utils/error-utils"
 import { appActions } from "app/app-reducer"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { todolistsActions } from "features/TodolistsList/todolists-reducer"
+import { todolistsActions } from "features/TodolistsList/Todolist/todolist-reducer/todolists-reducer"
 
 const slice = createSlice({
   name: "tasks",

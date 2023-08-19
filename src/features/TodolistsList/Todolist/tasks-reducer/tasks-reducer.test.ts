@@ -1,6 +1,6 @@
 import { TaskPriorities, TaskStatuses } from "api/todolists-api"
-import { todolistsActions } from "features/TodolistsList/todolists-reducer"
-import { tasksAction, tasksReducer, TasksStateType } from "features/TodolistsList/tasks-reducer"
+import { todolistsActions } from "features/TodolistsList/Todolist/todolist-reducer/todolists-reducer"
+import { tasksAction, tasksReducer, TasksStateType } from "features/TodolistsList/Todolist/tasks-reducer/tasks-reducer"
 
 let startState = {} as TasksStateType
 beforeEach(() => {

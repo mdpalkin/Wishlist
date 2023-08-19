@@ -15,11 +15,12 @@ import {
   Grid,
   TextField,
 } from "@mui/material"
+import { selectIsLoginIn } from "features/Login/auth-selectors"
 
 export const Login = () => {
   const dispatch = useAppDispatch()
 
-  const isLoggedIn = useSelector<AppRootStateType, boolean>((state) => state.auth.isLoggedIn)
+  const isLoggedIn = useSelector<AppRootStateType, boolean>(selectIsLoginIn)
 
   const formik = useFormik({
     validate: (values) => {

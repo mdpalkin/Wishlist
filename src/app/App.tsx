@@ -19,15 +19,16 @@ import {
   Typography,
 } from "@mui/material"
 import { Menu } from "@mui/icons-material"
-import { tasksAction } from "features/TodolistsList/tasks-reducer"
+import { tasksAction } from "features/TodolistsList/Todolist/tasks-reducer/tasks-reducer"
+import { selectIsInitialized, selectStatus } from "app/app-selectors"
 
 type PropsType = {
   demo?: boolean
 }
 
 function App({ demo = false }: PropsType) {
-  const status = useSelector<AppRootStateType, RequestStatusType>((state) => state.app.status)
-  const isInitialized = useSelector<AppRootStateType, boolean>((state) => state.app.isInitialized)
+  const status = useSelector<AppRootStateType, RequestStatusType>(selectStatus)
+  const isInitialized = useSelector<AppRootStateType, boolean>(selectIsInitialized)
   const isLoggedIn = useSelector<AppRootStateType, boolean>((state) => state.auth.isLoggedIn)
   const dispatch = useDispatch<any>()
 

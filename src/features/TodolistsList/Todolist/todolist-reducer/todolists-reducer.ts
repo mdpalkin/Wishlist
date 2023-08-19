@@ -4,7 +4,7 @@ import { handleServerAppError, handleServerNetworkError } from "utils/error-util
 import { AppThunk } from "app/store"
 import { appActions, RequestStatusType } from "app/app-reducer"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { tasksAction } from "features/TodolistsList/tasks-reducer"
+import { tasksAction } from "features/TodolistsList/Todolist/tasks-reducer/tasks-reducer"
 
 const slice = createSlice({
   name: "todolists",
