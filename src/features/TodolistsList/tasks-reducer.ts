@@ -1,4 +1,5 @@
 import {
+  ResultCodes,
   TaskPriorities,
   TaskStatuses,
   TaskType,
@@ -38,6 +39,12 @@ const slice = createSlice({
         tasksForTodolist[index] = { ...tasksForTodolist[index], ...action.payload.model }
       }
     },
+    clearData: (state) => {
+      Object.keys(state).forEach((key) => {
+        state[key] = []
+        delete state[key]
+      })
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -68,16 +75,27 @@ export const fetchTasksTC = (todolistId: string) => (dispatch: Dispatch) => {
   })
 }
 export const removeTaskTC = (taskId: string, todolistId: string) => (dispatch: Dispatch) => {
-  todolistsAPI.deleteTask(todolistId, taskId).then((res) => {
-    dispatch(tasksAction.removeTask({ todoId: todolistId, taskId }))
-  })
+  dispatch(appActions.setAppStatus({ status: "loading" }))
+  todolistsAPI
+    .deleteTask(todolistId, taskId)
+    .then((res) => {
+      if (res.data.resultCode === ResultCodes.OK) {
+        dispatch(tasksAction.removeTask({ todoId: todolistId, taskId }))
+        dispatch(appActions.setAppStatus({ status: "succeeded" }))
+      } else {
+        handleServerAppError(res.data, dispatch)
+      }
+    })
+    .catch((error) => {
+      handleServerNetworkError(error, dispatch)
+    })
 }
 export const addTaskTC = (title: string, todolistId: string) => (dispatch: Dispatch) => {
   dispatch(appActions.setAppStatus({ status: "loading" }))
   todolistsAPI
     .createTask(todolistId, title)
     .then((res) => {
-      if (res.data.resultCode === 0) {
+      if (res.data.resultCode === ResultCodes.OK) {
         const task = res.data.data.item
         dispatch(tasksAction.addTask({ task }))
         dispatch(appActions.setAppStatus({ status: "succeeded" }))
@@ -92,6 +110,8 @@ export const addTaskTC = (title: string, todolistId: string) => (dispatch: Dispa
 export const updateTaskTC =
   (taskId: string, domainModel: UpdateDomainTaskModelType, todolistId: string) =>
   (dispatch: ThunkDispatch, getState: () => AppRootStateType) => {
+    dispatch(appActions.setAppStatus({ status: "loading" }))
+
     const state = getState()
     const task = state.tasks[todolistId].find((t) => t.id === taskId)
     if (!task) {
@@ -113,8 +133,9 @@ export const updateTaskTC =
     todolistsAPI
       .updateTask(todolistId, taskId, apiModel)
       .then((res) => {
-        if (res.data.resultCode === 0) {
+        if (res.data.resultCode === ResultCodes.OK) {
           dispatch(tasksAction.updateTasks({ todoId: todolistId, taskId, model: domainModel }))
+          dispatch(appActions.setAppStatus({ status: "succeeded" }))
         } else {
           handleServerAppError(res.data, dispatch)
         }

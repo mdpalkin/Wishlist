@@ -36,19 +36,18 @@ export const loginTC = (data: LoginParamsType) => (dispatch: Dispatch) => {
       handleServerNetworkError(error, dispatch)
     })
 }
-export const logoutTC = () => (dispatch: Dispatch) => {
+export const logoutTC = () => async (dispatch: Dispatch) => {
   dispatch(appActions.setAppStatus({ status: "loading" }))
-  authAPI
-    .logout()
-    .then((res) => {
-      if (res.data.resultCode === 0) {
-        dispatch(authActions.setIsLoggedIn({ isLoggedIn: false }))
-        dispatch(appActions.setAppStatus({ status: "succeeded" }))
-      } else {
-        handleServerAppError(res.data, dispatch)
-      }
-    })
-    .catch((error) => {
-      handleServerNetworkError(error, dispatch)
-    })
+  try {
+    const res = await authAPI.logout()
+    if (res.data.resultCode === 0) {
+      dispatch(authActions.setIsLoggedIn({ isLoggedIn: false }))
+      dispatch(appActions.setAppStatus({ status: "succeeded" }))
+    } else {
+      handleServerAppError(res.data, dispatch)
+    }
+  } catch (error) {
+    handleServerNetworkError(error as Error, dispatch)
+    return Promise.reject()
+  }
 }

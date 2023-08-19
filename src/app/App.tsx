@@ -19,6 +19,7 @@ import {
   Typography,
 } from "@mui/material"
 import { Menu } from "@mui/icons-material"
+import { tasksAction } from "features/TodolistsList/tasks-reducer"
 
 type PropsType = {
   demo?: boolean
@@ -36,6 +37,8 @@ function App({ demo = false }: PropsType) {
 
   const logoutHandler = useCallback(() => {
     dispatch(logoutTC())
+      .then(() => dispatch(tasksAction.clearData()))
+      .catch(() => console.error("Lose connection"))
   }, [])
 
   if (!isInitialized) {
