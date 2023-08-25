@@ -1,8 +1,10 @@
 import { Dispatch } from "redux"
-import { authAPI, LoginParamsType } from "api/todolists-api"
-import { handleServerAppError, handleServerNetworkError } from "utils/error-utils"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { appActions } from "app/app-reducer"
+import { handleServerAppError, handleServerNetworkError } from "common/utils"
+import { authAPI, LoginParamsType } from "features/auth/authApi"
+import { ResultCodes } from "common/enums"
+
 
 const slice = createSlice({
   name: "auth",
@@ -25,7 +27,7 @@ export const loginTC = (data: LoginParamsType) => (dispatch: Dispatch) => {
   authAPI
     .login(data)
     .then((res) => {
-      if (res.data.resultCode === 0) {
+      if (res.data.resultCode === ResultCodes.OK) {
         dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }))
         dispatch(appActions.setAppStatus({ status: "succeeded" }))
       } else {
@@ -40,7 +42,7 @@ export const logoutTC = () => async (dispatch: Dispatch) => {
   dispatch(appActions.setAppStatus({ status: "loading" }))
   try {
     const res = await authAPI.logout()
-    if (res.data.resultCode === 0) {
+    if (res.data.resultCode === ResultCodes.OK) {
       dispatch(authActions.setIsLoggedIn({ isLoggedIn: false }))
       dispatch(appActions.setAppStatus({ status: "succeeded" }))
     } else {

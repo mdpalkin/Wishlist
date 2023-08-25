@@ -4,7 +4,7 @@ import { useSelector } from "react-redux"
 import { loginTC } from "./auth-reducer"
 import { AppRootStateType } from "app/store"
 import { Navigate } from "react-router-dom"
-import { useAppDispatch } from "hooks/useAppDispatch"
+import { useAppDispatch } from "common/hooks/useAppDispatch"
 import {
   Button,
   Checkbox,
@@ -15,7 +15,7 @@ import {
   Grid,
   TextField,
 } from "@mui/material"
-import { selectIsLoginIn } from "features/Login/auth-selectors"
+import { selectIsLoginIn } from "features/auth/auth-selectors"
 
 export const Login = () => {
   const dispatch = useAppDispatch()
