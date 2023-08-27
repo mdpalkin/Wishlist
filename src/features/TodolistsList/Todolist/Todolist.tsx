@@ -7,7 +7,7 @@ import { tasksThunks } from "features/TodolistsList/Todolist/tasks-reducer/tasks
 import { useAppDispatch } from "common/hooks/useAppDispatch"
 import { Button, IconButton } from "@mui/material"
 import { Delete } from "@mui/icons-material"
-import { TaskType } from "features/tasksApi"
+import { TaskType } from "features/TodolistsList/Todolist/tasksApi"
 import { TaskStatuses } from "common/enums"
 
 type PropsType = {

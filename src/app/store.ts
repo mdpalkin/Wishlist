@@ -3,7 +3,7 @@ import { todolistsReducer } from "features/TodolistsList/Todolist/todolist-reduc
 import { AnyAction } from "redux"
 import { ThunkAction, ThunkDispatch } from "redux-thunk"
 import { appReducer } from "./app-reducer"
-import { authReducer } from "features/auth/auth-reducer"
+import { authReducer } from "features"
 import { configureStore } from "@reduxjs/toolkit"
 
 // объединяя reducer-ы с помощью combineReducers,

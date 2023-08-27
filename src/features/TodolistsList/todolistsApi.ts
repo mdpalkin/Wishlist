@@ -13,9 +13,9 @@ export const todolistApi = {
   deleteTodolist(id: string) {
     return instance.delete<BaseResponseType>(`todo-lists/${id}`)
   },
-  updateTodolist(id: string, title: string) {
-    return instance.put<BaseResponseType>(`todo-lists/${id}`, {
-      title: title,
+  updateTodolist(arg: UpdateTodolistArg) {
+    return instance.put<BaseResponseType>(`todo-lists/${arg.id}`, {
+      title: arg.title,
     })
   }
 }
@@ -27,4 +27,9 @@ export type TodolistType = {
   title: string
   addedDate: string
   order: number
+}
+
+export type UpdateTodolistArg = {
+  title: string
+  id: string
 }

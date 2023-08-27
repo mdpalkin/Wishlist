@@ -1,14 +1,14 @@
-import { Dispatch } from "redux"
 import { authActions } from "features/auth/auth-reducer"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { authAPI } from "features/auth/authApi"
+import { createAsyncAppThunk, handleServerAppError, handleServerNetworkError } from "common/utils"
 
 const slice = createSlice({
   name: "app",
   initialState: {
     status: "idle" as RequestStatusType,
     error: null as null | string,
-    isInitialized: false,
+    isInitialized: false
   },
   reducers: {
     setAppError: (state, action: PayloadAction<{ error: string | null }>) => {
@@ -16,24 +16,39 @@ const slice = createSlice({
     },
     setAppStatus: (state, action: PayloadAction<{ status: RequestStatusType }>) => {
       state.status = action.payload.status
-    },
-    setAppInitialized: (state, action: PayloadAction<{ isInitialized: boolean }>) => {
-      state.isInitialized = action.payload.isInitialized
-    },
+    }
   },
+  extraReducers: builder => {
+    builder
+      .addCase(initializeApp.fulfilled, (state, action) => {
+        state.isInitialized = action.payload.isInitialized
+      })
+  }
 })
+
+
+export const initializeApp = createAsyncAppThunk("app/initializeApp",
+  async (arg, thunkAPI) => {
+    const { dispatch, rejectWithValue } = thunkAPI
+    try {
+    const res = await authAPI.me()
+
+      if (res.data.resultCode === 0) {
+        dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }))
+      } else {
+        handleServerAppError(res.data, dispatch)
+      }
+      return { isInitialized: true }
+    } catch (e) {
+      handleServerNetworkError(e, dispatch)
+      return rejectWithValue(null)
+    }
+
+  })
 
 export const appReducer = slice.reducer
 export const appActions = slice.actions
+export const appThunks = { initializeApp }
 export type appInitialState = ReturnType<typeof slice.getInitialState>
-
-export const initializeAppTC = () => (dispatch: Dispatch) => {
-  authAPI.me().then((res) => {
-    if (res.data.resultCode === 0) {
-      dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }))
-    }
-    dispatch(appActions.setAppInitialized({ isInitialized: true }))
-  })
-}
 
 export type RequestStatusType = "idle" | "loading" | "succeeded" | "failed"
