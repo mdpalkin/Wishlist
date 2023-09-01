@@ -10,7 +10,6 @@ import { configureStore } from "@reduxjs/toolkit"
 // мы задаём структуру нашего единственного объекта-состояния
 
 // непосредственно создаём store
-// export const store = createStore(rootReducer, applyMiddleware(thunkMiddleware))
 export const store = configureStore({
   reducer: {
     tasks: tasksReducer,

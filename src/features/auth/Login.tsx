@@ -1,7 +1,7 @@
 import React from "react"
-import { useFormik } from "formik"
+import { FormikHelpers, FormikValues, useFormik } from "formik"
 import { useSelector } from "react-redux"
-import { loginTC } from "./auth-reducer"
+import { authThunk, login } from "./auth-reducer"
 import { AppRootStateType } from "app/store"
 import { Navigate } from "react-router-dom"
 import { useAppDispatch } from "common/hooks/useAppDispatch"
@@ -13,9 +13,11 @@ import {
   FormGroup,
   FormLabel,
   Grid,
-  TextField,
+  TextField
 } from "@mui/material"
 import { selectIsLoginIn } from "features/auth/auth-selectors"
+import { LoginParamsType } from "features/auth/authApi"
+import { BaseResponseType, FieldErrorType } from "common/types/types"
 
 export const Login = () => {
   const dispatch = useAppDispatch()
@@ -24,25 +26,31 @@ export const Login = () => {
 
   const formik = useFormik({
     validate: (values) => {
-      if (!values.email) {
-        return {
-          email: "Email is required",
-        }
-      }
-      if (!values.password) {
-        return {
-          password: "Password is required",
-        }
-      }
+      // if (!values.email) {
+      //   return {
+      //     email: "Email is required",
+      //   }
+      // }
+      // if (!values.password) {
+      //   return {
+      //     password: "Password is required",
+      //   }
+      // }
     },
     initialValues: {
       email: "",
       password: "",
-      rememberMe: false,
+      rememberMe: false
     },
-    onSubmit: (values) => {
-      dispatch(loginTC(values))
-    },
+    onSubmit: (values, formikHelpers: FormikHelpers<LoginParamsType>) => {
+      dispatch(authThunk.login(values))
+        .unwrap()
+        .catch((err: BaseResponseType) => {
+          err.fieldsErrors.forEach(error => {
+            formikHelpers.setFieldError(error.field, error.error)
+          })
+        })
+    }
   })
 
   if (isLoggedIn) {

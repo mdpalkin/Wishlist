@@ -4,10 +4,10 @@ import { TodolistsList } from "features/TodolistsList/TodolistsList"
 import { ErrorSnackbar } from "common/components/ErrorSnackbar/ErrorSnackbar"
 import { useDispatch, useSelector } from "react-redux"
 import { AppRootStateType } from "./store"
-import { appThunks, RequestStatusType } from "./app-reducer"
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
+import { RequestStatusType } from "./app-reducer"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { Login } from "features/auth/Login"
-import { logoutTC } from "features/auth/auth-reducer"
+import { authThunk, logout } from "features/auth/auth-reducer"
 import {
   AppBar,
   Button,
@@ -16,7 +16,7 @@ import {
   IconButton,
   LinearProgress,
   Toolbar,
-  Typography,
+  Typography
 } from "@mui/material"
 import { Menu } from "@mui/icons-material"
 import { tasksAction } from "features/TodolistsList/Todolist/tasks-reducer/tasks-reducer"
@@ -33,11 +33,11 @@ function App({ demo = false }: PropsType) {
   const dispatch = useDispatch<any>()
 
   useEffect(() => {
-    dispatch(appThunks.initializeApp())
+    dispatch(authThunk.initializeApp())
   }, [])
 
   const logoutHandler = useCallback(() => {
-    dispatch(logoutTC())
+    dispatch(logout())
       .then(() => dispatch(tasksAction.clearData()))
       .catch(() => console.error("Lose connection"))
   }, [])
