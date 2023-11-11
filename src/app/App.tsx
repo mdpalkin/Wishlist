@@ -48,10 +48,7 @@ function App() {
         <ErrorSnackbar />
         <AppBar position="static">
           <Toolbar>
-            <IconButton edge="start" color="inherit" aria-label="menu">
-              <Menu />
-            </IconButton>
-            <Typography variant="h6">News</Typography>
+            <Typography variant="h6">Todolist</Typography>
             {isLoggedIn && (
               <Button color="inherit" onClick={logoutHandler}>
                 Log out
